@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,10 +39,20 @@ public class AuthController {
         }
     }
 
-//    @PostMapping("/login")
-//    public void login(@RequestBody @Valid LoginRequestDTO loginRequest) {
-//        try {
-//            // TODO
-//        }
-//    }
+        /*
+            * AuthenticationManager receives credentials & calls CustomUserDetailsService
+            * Retrieves hashed password
+            * Compares raw vs hashed using PasswordEncoder
+         */
+        @PostMapping("/login")
+        public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+            authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
+            return ResponseEntity.ok("Login successful");
+        }
+
 }

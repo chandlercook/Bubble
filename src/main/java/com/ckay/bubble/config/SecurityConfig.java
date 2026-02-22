@@ -15,7 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -36,6 +35,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+    /*
+        * Credentials are processed by the AuthenticationManager,
+        * which verifies them against stored user data
+        *
+        * If the credentials are valid, an Authentication object is created and stored in the SecurityContext,
+        * which holds the user's security information throughout the request.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
