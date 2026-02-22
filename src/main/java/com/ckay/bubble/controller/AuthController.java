@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthenticationManager authManager;
-    private UserService userService;
+    private final UserService userService;
 
     public AuthController(AuthenticationManager authManager, UserService userService) {
         this.authManager = authManager;
@@ -40,19 +41,27 @@ public class AuthController {
     }
 
         /*
+            * -- Authentication Object in Spring Security --
             * AuthenticationManager receives credentials & calls CustomUserDetailsService
-            * Retrieves hashed password
-            * Compares raw vs hashed using PasswordEncoder
+            * load user from DB
+            * Spring automatically compares raw vs hashed password using PasswordEncoder
+            * If correct → builds a fully populated Authentication object
          */
         @PostMapping("/login")
         public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
-            authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
-                            loginRequest.getPassword()
-                    )
-            );
-            return ResponseEntity.ok("Login successful");
-        }
+            try {
+                Authentication authentication = authManager.authenticate(
+                        new UsernamePasswordAuthenticationToken( // Spring Security class, holds principal
+                                loginRequest.getUsername(),
+                                loginRequest.getPassword()
+                        )
+                );
 
+                String token = jwtUtil.generateToken(authentication);
+                return ResponseEntity.ok(Map.of("token", token));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "invalid username or password"));
+            }
+        }
 }

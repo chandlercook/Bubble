@@ -35,7 +35,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     /*
         * Credentials are processed by the AuthenticationManager,
         * which verifies them against stored user data
