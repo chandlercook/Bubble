@@ -1,5 +1,4 @@
-package com.ckay.bubble.model;
-import jakarta.validation.constraints.Email;
+package com.ckay.bubble.model.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

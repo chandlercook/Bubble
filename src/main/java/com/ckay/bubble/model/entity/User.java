@@ -1,8 +1,5 @@
-package com.ckay.bubble.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+package com.ckay.bubble.model.entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users")
 public class User {
 
     @Id
@@ -22,6 +20,7 @@ public class User {
     private String username;
 
     @Setter
+    @Column(name = "password_hash")
     private String passwordHash;
 
 }
