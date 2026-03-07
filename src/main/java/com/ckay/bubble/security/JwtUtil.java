@@ -39,8 +39,6 @@ public class JwtUtil {
 
     public JwtUtil(@Value("${JWT_SECRET}") String secret) {
 
-        System.out.println("JWT_SECRET = " + System.getenv("JWT_SECRET"));
-
         if (secret == null) {
             throw new IllegalStateException("JWT_SECRET environment variable not set");
         }
