@@ -2,6 +2,7 @@ package com.ckay.bubble.controller;
 
 import com.ckay.bubble.model.dto.LoginRequestDTO;
 import com.ckay.bubble.model.dto.RegisterRequestDTO;
+import com.ckay.bubble.security.JwtUtil;
 import com.ckay.bubble.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,12 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(AuthenticationManager authManager, UserService userService) {
+    public AuthController(AuthenticationManager authManager, UserService userService, JwtUtil jwtUtil) {
         this.authManager = authManager;
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -46,22 +49,24 @@ public class AuthController {
             * load user from DB
             * Spring automatically compares raw vs hashed password using PasswordEncoder
             * If correct → builds a fully populated Authentication object
-         */
-        @PostMapping("/login")
-        public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
-            try {
-                Authentication authentication = authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken( // Spring Security class, holds principal
-                                loginRequest.getUsername(),
-                                loginRequest.getPassword()
-                        )
-                );
+        */
 
-                String token = jwtUtil.generateToken(authentication);
-                return ResponseEntity.ok(Map.of("token", token));
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "invalid username or password"));
-            }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken( // Spring Security class, holds principal
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
+
+            String token = jwtUtil.generateToken(authentication);
+            return ResponseEntity.ok(Map.of("token", token));
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "invalid username or password"));
         }
+    }
 }

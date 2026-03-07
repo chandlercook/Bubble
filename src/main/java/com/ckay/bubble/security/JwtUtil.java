@@ -1,13 +1,12 @@
 package com.ckay.bubble.security;
 
+import io.jsonwebtoken.io.Decoders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Component;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
@@ -15,17 +14,40 @@ public class JwtUtil {
 
     //TODO After implementing WebSockets, refactor this to use Claims to parse the JWT once each request (not 3 lol)
 
+    /*
+     * --- JWT Security Notes 2/26/26 ---
+     *
+     * I use JWT with HS256 (HMAC-SHA256).
+     *
+     * The signing key is NOT a password. It is a 256-bit cryptographic key
+     * generated once using a CSPRNG (Keys.secretKeyFor in JJWT).
+     *
+     * The key is Base64-encoded only for storage (environment variable).
+     * At runtime the app Base64-decodes it and reconstructs the SecretKey.
+     * Base64 does not add security — it only transports binary data safely.
+     *
+     * Important :
+     * 1. Never derive the key from a human string (no getBytes() on a password)
+     * 2. Security comes from entropy (randomness of the key), not complexity.
+     *
+     * If the key leaks, attackers could then forge valid tokens and impersonate users.
+     */
+
 
     //Signs and verifies JWTs
-    private final Key secretKey;
+    private final SecretKey secretKey;
 
-    public JwtUtil() {
+    public JwtUtil(@Value("${JWT_SECRET}") String secret) {
 
-        String secret = System.getenv("JWT_SECRET");
+        System.out.println("JWT_SECRET = " + System.getenv("JWT_SECRET"));
+
         if (secret == null) {
             throw new IllegalStateException("JWT_SECRET environment variable not set");
         }
-        secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes); // Generate
+
     }
 
     public String generateToken(Authentication authentication) {
@@ -38,10 +60,10 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        return Jwts.parserBuilder()                  // returns JwtParserBuilder now
+        return Jwts.parserBuilder()         // returns JwtParserBuilder now
                 .setSigningKey(secretKey)   // configure signing key
-                .build()                     // build JwtParser
-                .parseClaimsJws(token)       // parse token
+                .build()                    // build JwtParser
+                .parseClaimsJws(token)      // parse token
                 .getBody()
                 .getSubject();
     }

@@ -53,13 +53,13 @@ public class UserControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
-                .andExpect(status().isCreated());
+                        .andExpect(status().isCreated());
 
         // 2: Attempt login on temporary account
         mockMvc.perform(post("/api/auth/login")
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(userJson))
-                .andExpect(status().isOk());
+                    .andExpect(status().isOk());
     }
 }
