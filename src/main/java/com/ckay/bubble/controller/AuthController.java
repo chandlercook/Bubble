@@ -69,4 +69,5 @@ public class AuthController {
                     .body(Map.of("error", "invalid username or password"));
         }
     }
+
 }
