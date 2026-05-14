@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+
+<input id="msg" placeholder="Type message"/>
+<button onclick="send()">Send</button>
+
+<ul id="messages"></ul>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+<script>
+    const socket = new SockJS("http://localhost:8080/ws");
+    const stompClient = Stomp.over(socket);
+
+    // After you login, set this (example: localStorage.setItem("jwt", token))
+    const jwt = localStorage.getItem("jwt");
+
+    stompClient.connect(
+      jwt ? { Authorization: `Bearer ${jwt}` } : {},
+      function () {
+        console.log("Connected");
+
+        // callback function, where to listen, what to do when message arrives
+        stompClient.subscribe("/topic/messages", function (message) {
+
+            const data = JSON.parse(message.body);
+
+            //create list of messages
+            const li = document.createElement("li");
+            li.textContent = data.content + (data.sender ? ` (${data.sender})` : "");
+            document.getElementById("messages").appendChild(li);
+        });
+      }
+    );
+
+    function send() {
+        const msg = document.getElementById("msg").value;
+
+        stompClient.send("/app/chat", {}, JSON.stringify({
+            content: msg
+        }));
+    }
+</script>
+</body>
+</html>
