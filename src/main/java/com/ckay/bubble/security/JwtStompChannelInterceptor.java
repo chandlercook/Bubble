@@ -28,6 +28,7 @@ public class JwtStompChannelInterceptor implements ChannelInterceptor {
     // channel -> the internal Spring pipe the message is currently traveling through
     @Override
     public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
+
         StompHeaderAccessor accessor =
                 MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 

@@ -2,6 +2,10 @@ package com.ckay.bubble.controller;
 
 
 import com.ckay.bubble.model.dto.ChatMessageDTO;
+import com.ckay.bubble.model.entity.ChatMessage;
+import com.ckay.bubble.repository.ChatMessageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.AccessDeniedException;
@@ -28,14 +32,24 @@ public class ChatController {
     * -> Having two channels or chatrooms open at once, and switching between both
     * */
 
+
+    private final ChatMessageRepository messageRepository;
+    public ChatController(ChatMessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
+
     // Client -> Server: Client sends a message, goes to this controller via @MessageMapping
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
-    public ChatMessageDTO sendMessage(ChatMessageDTO message, Principal principal) {
+    public ChatMessageDTO sendMessage(ChatMessageDTO message, Principal principal, @DestinationVariable String roomId) {
         if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
             throw new AccessDeniedException("You must be authenticated to chat");
         }
-        message.setSender(principal.getName()); // link each message to sender
+
+        message.setRoomId(roomId);
+        messageRepository.save(new ChatMessage(message));
+
+        message.setSender(principal.getName()); // link each message to a sender
         return message;
     }
 }
