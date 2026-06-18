@@ -18,17 +18,19 @@ public class ChatController {
 
     /*
     * TODO
-    * Attach JWT to WebSocket
-    * - identify users
-    * - send messages as specific users
-    * - build real chat system
+
+    * -> Create actual tests with Spring if possible/needed for JWT
     *
-    * -> Test current JWT WebSocket set up
-    * -> Create actual tests with Spring if possible/needed
-    * -> Work a little more on a front end, having a simple login screen and basic chat interface
+    * Work on displaying chat room history after closing tab (persistent storage already set up)
+    * Page loads
+    -> determine current roomId, like "123"
+    -> fetch existing messages for that room over HTTP
+    -> render them into the <ul>
+    -> connect WebSocket
+    -> subscribe to /topic/messages/123
+    -> append new live messages as they arrive
     *
     * -> Method to create new rooms (channels)
-    *
     * -> Having two channels or chatrooms open at once, and switching between both
     * */
 
@@ -39,8 +41,8 @@ public class ChatController {
     }
 
     // Client -> Server: Client sends a message, goes to this controller via @MessageMapping
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
+    @MessageMapping("/chat/{roomId}") // handles incoming messages, binds roomId
+    @SendTo("/topic/messages/{roomId}") // broadcasts returned message to clients subbed to {roomId}
     public ChatMessageDTO sendMessage(ChatMessageDTO message, Principal principal, @DestinationVariable String roomId) {
         if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
             throw new AccessDeniedException("You must be authenticated to chat");
@@ -53,3 +55,23 @@ public class ChatController {
         return message;
     }
 }
+
+/*
+   == Flow ==
+
+    send to sever:
+    /app/chat/123
+
+    controller receives:
+    @MessageMapping("/chat/{roomId}")
+
+    server publishes:
+    @SendTo("/topic/messages/{roomId}")
+
+    clients receive from:
+    /topic/messages/123
+
+    @MessageMapping = route matcher
+    @DestinationVariable = route value extractor
+    @SendTo = outgoing broadcaster
+ */

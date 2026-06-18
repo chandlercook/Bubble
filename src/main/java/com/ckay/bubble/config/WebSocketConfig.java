@@ -31,7 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/app");
     }
 
-    // ws://localhost:8080/ws -> handshake URL
+    // ws://localhost:8080/ws -> handshake URL!
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws") // connection endpoint (where client connects)

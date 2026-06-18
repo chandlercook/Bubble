@@ -26,6 +26,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Cross-Site Request Forgery (unwanted actions)
                 .cors(Customizer.withDefaults()) // Cross-Origin Resource Sharing (access to data)
                 .authorizeHttpRequests(auth -> auth
+                        // Static pages/assets for a simple browser UI
+                        .requestMatchers(HttpMethod.GET,
+                                "/", "/index.html", "/login.html", "/chat.html", "/test.html",
+                                "/favicon.ico",
+                                "/**/*.css", "/**/*.js", "/**/*.map",
+                                "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif", "/**/*.svg",
+                                "/**/*.woff", "/**/*.woff2", "/**/*.ttf"
+                        ).permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .anyRequest().authenticated()

@@ -26,7 +26,7 @@
         console.log("Connected");
 
         // callback function, where to listen, what to do when message arrives
-        stompClient.subscribe("/topic/messages", function (message) {
+        stompClient.subscribe("/topic/messages/123", function (message) {
 
             const data = JSON.parse(message.body);
 
