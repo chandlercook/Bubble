@@ -3,10 +3,14 @@ package com.ckay.bubble.model.entity;
 
 import com.ckay.bubble.model.dto.ChatMessageDTO;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "chat_messages")
 public class ChatMessage {

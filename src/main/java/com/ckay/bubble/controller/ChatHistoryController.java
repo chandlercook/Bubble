@@ -19,10 +19,9 @@ public class ChatHistoryController {
         repository = messageHistoryRepository;
     }
 
-    @GetMapping("/history/messages")
+    @GetMapping("/{roomId}/messages")
     public ResponseEntity<List<ChatMessage>> getChatHistory(@PathVariable String roomId) {
         List<ChatMessage> history = repository.findByRoomIdOrderByCreatedAtAsc(roomId);
         return ResponseEntity.ok(history);
     }
-
 }

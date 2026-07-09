@@ -17,12 +17,14 @@ import java.security.Principal;
 public class ChatController {
 
     /*
-    * TODO
-
-    * -> Create actual tests with Spring if possible/needed for JWT
     *
+
+    == Create actual tests with Spring if possible/needed for JWT ==
+
+    -- TODO --
     * Work on displaying chat room history after closing tab (persistent storage already set up)
     * Page loads
+    *
     -> determine current roomId, like "123"
     -> fetch existing messages for that room over HTTP
     -> render them into the <ul>
@@ -49,9 +51,8 @@ public class ChatController {
         }
 
         message.setRoomId(roomId);
-        messageRepository.save(new ChatMessage(message));
-
         message.setSender(principal.getName()); // link each message to a sender
+        messageRepository.save(new ChatMessage(message));
         return message;
     }
 }
