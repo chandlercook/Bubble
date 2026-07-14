@@ -1,25 +1,24 @@
 package com.ckay.bubble.controller;
 
 import com.ckay.bubble.model.entity.ChatMessage;
-import com.ckay.bubble.repository.ChatMessageRepository;
+import com.ckay.bubble.repository.ChannelRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/chat-history")
+@RequestMapping("/api/channel")
 @CrossOrigin(origins = "*")
-public class ChatHistoryController {
+public class ChannelController {
 
-    private final ChatMessageRepository repository;
+    private final ChannelRepository repository;
 
-    public ChatHistoryController(ChatMessageRepository messageHistoryRepository) {
+    public ChannelController(ChannelRepository messageHistoryRepository) {
         repository = messageHistoryRepository;
     }
 
-    @GetMapping("/{roomId}/messages")
+    @GetMapping("/{roomId}/channel-history")
     public ResponseEntity<List<ChatMessage>> getChatHistory(@PathVariable String roomId) {
         List<ChatMessage> history = repository.findByRoomIdOrderByCreatedAtAsc(roomId);
         return ResponseEntity.ok(history);
