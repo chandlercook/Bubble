@@ -21,7 +21,11 @@ public class ChatMessage {
 
     @Column(name = "room_id")
     private String roomId;
-    private String sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User author;
+
     private String content;
 
     @Column(name = "created_at", insertable = false, updatable = false)
@@ -31,7 +35,6 @@ public class ChatMessage {
 
     public ChatMessage(ChatMessageDTO message) {
         this.roomId = message.getRoomId();
-        this.sender = message.getSender();
         this.content = message.getContent();
         this.createdAt = LocalDateTime.now();
     }

@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class ChannelDTO {
     private String channelName;
+    private String owner;
 }

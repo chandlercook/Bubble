@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -22,5 +24,10 @@ public class User {
     @Setter
     @Column(name = "password_hash")
     private String passwordHash;
+
+    @OneToMany(mappedBy="user")
+    private List<ChatMessage> chatMessages;
+
+
 
 }

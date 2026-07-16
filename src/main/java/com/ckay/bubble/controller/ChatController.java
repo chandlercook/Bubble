@@ -4,6 +4,7 @@ package com.ckay.bubble.controller;
 import com.ckay.bubble.model.dto.ChatMessageDTO;
 import com.ckay.bubble.model.entity.ChatMessage;
 import com.ckay.bubble.repository.ChannelRepository;
+import com.ckay.bubble.repository.ChatMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,6 +21,10 @@ public class ChatController {
     *
     == Create actual tests with Spring if possible/needed for JWT ==
 
+*   -> Clean up methods/business logic by moving them to Service classes
+*   -> establish foreign keys between User <-> ChatMessage <-> Channel to create proper database
+*       relationships
+*
     -- TODO --
 
     * Method to create new rooms (channels)
@@ -28,8 +33,8 @@ public class ChatController {
     * */
 // dsd
 
-    private final ChannelRepository messageRepository;
-    public ChatController(ChannelRepository messageRepository) {
+    private final ChatMessageRepository messageRepository;
+    public ChatController(ChatMessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
 
