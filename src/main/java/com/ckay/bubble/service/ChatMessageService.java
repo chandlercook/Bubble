@@ -1,0 +1,7 @@
+package com.ckay.bubble.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class ChatMessageService {
+}

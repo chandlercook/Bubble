@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> {
+public interface ChannelRepository extends JpaRepository<Channel, UUID> {
 
-    List<ChatMessage> findByRoomIdOrderByCreatedAtAsc(String roomId);
+
 }

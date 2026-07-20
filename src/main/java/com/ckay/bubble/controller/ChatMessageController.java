@@ -4,7 +4,6 @@ package com.ckay.bubble.controller;
 import com.ckay.bubble.model.dto.ChatMessageDTO;
 import com.ckay.bubble.model.entity.ChatMessage;
 import com.ckay.bubble.repository.ChatMessageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -14,31 +13,27 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 
 @Controller
-public class ChatController {
+public class ChatMessageController {
 
     /*
     *
-
     == Create actual tests with Spring if possible/needed for JWT ==
 
+*   -> Clean up methods/business logic by moving them to Service classes
+*   -> establish foreign keys between User <-> ChatMessage <-> Channel to create proper database
+*       relationships
+*   -> populate "created_at" field for messages
     -- TODO --
-    * Work on displaying chat room history after closing tab (persistent storage already set up)
-    * Page loads
-    *
-    -> determine current roomId, like "123"
-    -> fetch existing messages for that room over HTTP
-    -> render them into the <ul>
-    -> connect WebSocket
-    -> subscribe to /topic/messages/123
-    -> append new live messages as they arrive
-    *
-    * -> Method to create new rooms (channels)
-    * -> Having two channels or chatrooms open at once, and switching between both
-    * */
 
+    * Method to create new rooms (channels)
+    * Make it so every new message is now tied to a channel through a foreign key
+    * Having two channels or chatrooms open at once, and switching between both
+    * Eventually rename this file to ChatSocketController, and seperate concerns
+    * */
+// dsd
 
     private final ChatMessageRepository messageRepository;
-    public ChatController(ChatMessageRepository messageRepository) {
+    public ChatMessageController(ChatMessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
 
@@ -51,7 +46,7 @@ public class ChatController {
         }
 
         message.setRoomId(roomId);
-        message.setSender(principal.getName()); // link each message to a sender
+        message.setAuthorUsername(principal.getName()); // link each message to a sender
         messageRepository.save(new ChatMessage(message));
         return message;
     }

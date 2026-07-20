@@ -21,17 +21,24 @@ public class ChatMessage {
 
     @Column(name = "room_id")
     private String roomId;
-    private String sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
+
     private String content;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // Getters and setters
+
 
     public ChatMessage(ChatMessageDTO message) {
         this.roomId = message.getRoomId();
-        this.sender = message.getSender();
         this.content = message.getContent();
         this.createdAt = LocalDateTime.now();
     }

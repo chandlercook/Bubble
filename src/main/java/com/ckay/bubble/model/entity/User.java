@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -23,4 +25,9 @@ public class User {
     @Column(name = "password_hash")
     private String passwordHash;
 
+    @OneToMany(mappedBy = "author")
+    private List<ChatMessage> chatMessages;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Channel> channels;
 }
