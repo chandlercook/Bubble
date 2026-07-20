@@ -25,9 +25,9 @@ public class User {
     @Column(name = "password_hash")
     private String passwordHash;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "author")
     private List<ChatMessage> chatMessages;
 
-
-
+    @OneToMany(mappedBy = "owner")
+    private List<Channel> channels;
 }

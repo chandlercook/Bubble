@@ -33,7 +33,7 @@ public class ChannelService {
         }
 
         Channel channel = new Channel();
-        channel.setOwner(channelName);
+        channel.setOwner(userRepository.findByUsername(user).get());
         channel.setName(channelName);
         channelRepository.save(channel);
     }

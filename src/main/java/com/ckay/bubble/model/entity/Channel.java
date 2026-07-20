@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -15,13 +16,16 @@ public class Channel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "channel_id")
     private UUID channelId;
 
     @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name = "owner")
-    private String owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @OneToMany(mappedBy = "channel")
+    private List<ChatMessage> chatMessages;
 
 }
