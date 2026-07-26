@@ -95,7 +95,7 @@
     const tokenKey = "jwt";
 
     if (localStorage.getItem(tokenKey)) {
-      window.location.replace("/chat.html");
+      window.location.replace("/homePage.html");
     }
 
     const form = document.getElementById("loginForm");
@@ -139,7 +139,7 @@
         as the storage key. This token can be used later to authenticate API requests.
          */
         localStorage.setItem(tokenKey, body.token);
-        window.location.replace("/chat.html"); // pressing Back will not return to the login page
+        window.location.replace("/homePage.html"); // pressing Back will not return to the login page
       } catch (err) {
         setMsg("Network error during login", true);
       } finally {
@@ -149,4 +149,3 @@
   </script>
 </body>
 </html>
-

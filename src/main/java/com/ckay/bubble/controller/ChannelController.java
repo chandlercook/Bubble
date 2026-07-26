@@ -1,14 +1,14 @@
 package com.ckay.bubble.controller;
 
 import com.ckay.bubble.model.dto.ChannelDTO;
+import com.ckay.bubble.model.dto.ChannelSummaryDTO;
 import com.ckay.bubble.model.entity.Channel;
 import com.ckay.bubble.model.entity.ChatMessage;
-import com.ckay.bubble.repository.ChannelRepository;
 import com.ckay.bubble.repository.ChatMessageRepository;
-import com.ckay.bubble.repository.UserRepository;
 import com.ckay.bubble.service.ChannelService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -37,11 +37,27 @@ public class ChannelController {
 
     // TODO Test this endpoint using Spring tests
     @PostMapping("/create-channel")
-    public ResponseEntity<Channel> createChannel(@RequestBody ChannelDTO channelDTO) {
+    public ResponseEntity<ChannelSummaryDTO> createChannel(@RequestBody ChannelDTO channelDTO, Authentication authentication) {
         if (channelDTO == null) {
             throw new IllegalArgumentException("channelDTO is null");
         }
-        channelService.createChannel(channelDTO.getChannelName(), channelDTO.getOwner());
-        return ResponseEntity.ok().build();
+        if (authentication == null || authentication.getName() == null || authentication.getName().isBlank()) {
+            return ResponseEntity.status(401).build();
+        }
+        if (channelDTO.getChannelName() == null || channelDTO.getChannelName().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Channel created = channelService.createChannel(channelDTO.getChannelName().trim(), authentication.getName());
+        return ResponseEntity.ok(new ChannelSummaryDTO(
+                created.getChannelId(),
+                created.getName(),
+                created.getOwner() != null ? created.getOwner().getUsername() : null
+        ));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<ChannelSummaryDTO>> listChannels() {
+        return ResponseEntity.ok(channelService.listChannels());
     }
 }

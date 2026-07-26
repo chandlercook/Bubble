@@ -122,17 +122,14 @@
   <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
   <script>
 
-    /*
-
-    == hardcoded roomId of 123 ==
-
-     */
-
     const tokenKey = "jwt";
     const jwt = localStorage.getItem(tokenKey);
     if (!jwt) {
       window.location.replace("/login.html");
     }
+
+    const params = new URLSearchParams(window.location.search);
+    const roomId = (params.get("roomId") || "123").trim();
 
     const statusEl = document.getElementById("status");
     const messagesEl = document.getElementById("messages");
@@ -149,7 +146,7 @@
     // each time this page loads, run this function
     window.onload = function retrieveMessages() {
       // fetch from this GET endpoint with the jwt in payload for authz
-      fetch("/api/chat-history/123/messages", {
+      fetch(`/api/channel/${encodeURIComponent(roomId)}/channel-history`, {
         headers: {
           Authorization: "Bearer " + jwt
         }
@@ -209,10 +206,10 @@
     }
 
     const subject = parseJwtSubject(jwt);
-    if (subject) {
-      whoamiEl.textContent = "Signed in as " + subject;
-    }
+    const who = subject ? `Signed in as ${subject}` : "Signed in";
+    whoamiEl.textContent = `${who} • Room ${roomId}`;
 
+    // Establish WebSocket connection
     const socket = new SockJS("/ws");
     const stompClient = Stomp.over(socket);
     stompClient.debug = null;
@@ -225,7 +222,7 @@
     function send() {
       const content = msgInput.value.trim();
       if (!content) return;
-      stompClient.send("/app/chat/123", {}, JSON.stringify({ content }));
+      stompClient.send(`/app/chat/${roomId}`, {}, JSON.stringify({ content }));
       msgInput.value = "";
       msgInput.focus();
     }
@@ -234,7 +231,7 @@
       { Authorization: "Bearer " + jwt },
       function () {
         setStatus("Connected");
-        stompClient.subscribe("/topic/messages/123", function (message) {
+        stompClient.subscribe(`/topic/messages/${roomId}`, function (message) {
           const data = JSON.parse(message.body);
           addMessage(data);
         });
@@ -246,4 +243,3 @@
   </script>
 </body>
 </html>
-
