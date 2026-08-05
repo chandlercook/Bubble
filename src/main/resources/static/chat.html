@@ -179,7 +179,7 @@
     // Where user is attached to message
     function addMessage(data) {
       const li = document.createElement("li");
-      const sender = data.sender ? data.sender : "unknown";
+      const sender = data.authorUsername ? data.authorUsername : "unknown";
       li.textContent = data.content || "";
       const meta = document.createElement("div");
       meta.className = "meta";
