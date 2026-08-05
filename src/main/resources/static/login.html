@@ -50,7 +50,7 @@
     }
     input:focus { border-color: rgba(122,162,247,0.65); box-shadow: 0 0 0 3px rgba(122,162,247,0.18); }
     .row { display: flex; gap: 10px; margin-top: 14px; align-items: center; }
-    button {
+    button, .link-button {
       border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.12);
       background: #1b2a4a;
@@ -60,8 +60,16 @@
       font-weight: 600;
       flex: 1;
     }
-    button:hover { background: #21355f; }
+    button:hover, .link-button:hover { background: #21355f; }
     button:disabled { opacity: 0.7; cursor: default; }
+    .link-button {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      box-sizing: border-box;
+      font-size: 14px;
+      line-height: 1;
+    }
     .msg {
       margin-top: 12px;
       font-size: 12px;
@@ -87,6 +95,11 @@
       <div class="row">
         <button id="loginBtn" type="submit">Login</button>
       </div>
+
+      <div class="row">
+        <a class="link-button" href="register.html">Register</a>
+      </div>
+
       <div id="msg" class="msg"></div>
     </form>
   </div>
@@ -135,7 +148,7 @@
         }
 
         /*
-        Stores the login token in the browser’s localStorage, using tokenKey
+        Stores the login token in the browser's localStorage, using tokenKey
         as the storage key. This token can be used later to authenticate API requests.
          */
         localStorage.setItem(tokenKey, body.token);

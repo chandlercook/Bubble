@@ -18,17 +18,16 @@ public class ChatMessageController {
     /*
     *
     == Create actual tests with Spring if possible/needed for JWT ==
+    *
+    -> Clean up methods/business logic by moving them to Service classes
+ -- TODO --
 
-*   -> Clean up methods/business logic by moving them to Service classes
-*   -> establish foreign keys between User <-> ChatMessage <-> Channel to create proper database
-*       relationships
-*   -> populate "created_at" field for messages
-    -- TODO --
+   -> populate "created_at" field for messages
+   -> Fix "unknown" user error on messages
+   -> Create login page
 
-    * Method to create new rooms (channels)
-    * Make it so every new message is now tied to a channel through a foreign key
-    * Having two channels or chatrooms open at once, and switching between both
     * Eventually rename this file to ChatSocketController, and seperate concerns
+    *
     * */
 // dsd
 

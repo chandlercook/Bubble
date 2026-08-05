@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Static pages/assets for a simple browser UI
                         .requestMatchers(HttpMethod.GET,
-                                "/", "/index.html", "/login.html", "/homePage.html", "/channels.html", "/chat.html", "/test.html",
+                                "/", "/index.html", "/login.html", "/homePage.html", "/channels.html", "/chat.html", "/test.html", "/register.html",
                                 "/favicon.ico",
                                 "/**/*.css", "/**/*.js", "/**/*.map",
                                 "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif", "/**/*.svg",

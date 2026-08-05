@@ -21,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthenticationManager authManager;
+    private final AuthenticationManager authManager; // processes unauthorized authentication requests
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
@@ -53,6 +53,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+
+        // Attempt to authenticate login info, generate JWT if successful
         try {
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken( // Spring Security class, holds principal
